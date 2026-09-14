@@ -24,12 +24,15 @@
 
 ```bash
 pnpm install
+pnpm build
 pnpm dev
 pnpm dev:react
 pnpm check
 pnpm build
 pnpm test:e2e
 ```
+
+Playground 使用工作区包的 `dist` 构建产物，首次启动前以及修改组件库源码后需执行 `pnpm build`。
 
 ## 文档与测试
 
