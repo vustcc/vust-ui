@@ -26,6 +26,7 @@ coverage
 *.lcov
 playwright-report/
 test-results/
+artifacts/glass/
 
 # nyc test coverage
 .nyc_output

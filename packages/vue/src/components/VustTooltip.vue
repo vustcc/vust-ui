@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { VustGlassValue } from "../glass";
+import { useGlass } from "../internal/use-glass";
 import { ref, onMounted, onUnmounted, nextTick, watch } from "vue";
 
 /**
@@ -10,6 +12,7 @@ type TooltipPosition = "top" | "bottom" | "left" | "right";
 
 const props = withDefaults(
   defineProps<{
+    glass?: VustGlassValue;
     /** 提示文字内容 */
     text: string;
     /** 显示位置 */
@@ -20,6 +23,7 @@ const props = withDefaults(
     disabled?: boolean;
   }>(),
   {
+    glass: undefined,
     position: "top",
     delay: 200,
     disabled: false,
@@ -159,6 +163,7 @@ onUnmounted(() => {
   window.removeEventListener("resize", calculatePosition);
   window.removeEventListener("scroll", calculatePosition, true);
 });
+const vGlass = useGlass(() => props.glass, "surface");
 </script>
 
 <template>
@@ -176,6 +181,7 @@ onUnmounted(() => {
           v-if="isVisible && text && !disabled"
           ref="tooltipRef"
           :id="tooltipId"
+          v-glass
           class="vl-tooltip-content"
           role="tooltip"
           :style="tooltipStyle"

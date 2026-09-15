@@ -2,6 +2,10 @@
 
 VUST Vue 3 基础组件库，实现 VUST Design Language（VDL）的通用交互和视觉规范。
 
+适用表面默认采用 Liquid Glass，支持 `glass` 属性和 `VustGlassProvider` 统一调节。
+参见 [Vue Liquid Glass 接口、组件范围与验证说明](../../docs/components/liquid-glass-vue.md)。
+滑块和偏好存储由消费项目实现；React 移植另行进行。
+
 ## 安装
 
 ```bash

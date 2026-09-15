@@ -53,6 +53,7 @@ defineProps<Props>();
   position: relative;
   width: 100%;
   min-width: 0;
+  border-radius: var(--vdl-radius-md);
 }
 
 .vl-loading-host.is-loading {
@@ -62,6 +63,7 @@ defineProps<Props>();
 .vl-loading-host.is-cover {
   position: absolute;
   inset: 0;
+  border-radius: inherit;
   pointer-events: none;
   min-height: 0;
 }
@@ -74,6 +76,7 @@ defineProps<Props>();
 .vl-loading-mask {
   position: absolute;
   inset: 0;
+  border-radius: inherit;
   background-color: var(--vdl-bg-backdrop);
   display: flex;
   align-items: center;

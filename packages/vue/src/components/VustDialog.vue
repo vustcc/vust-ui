@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { VustGlassValue } from "../glass";
+import { useGlass } from "../internal/use-glass";
 import { computed, nextTick, onBeforeUnmount, ref, watch } from "vue";
 import { activateModalLifecycle } from "../internal/modal-lifecycle";
 
@@ -11,6 +13,7 @@ defineOptions({
  */
 
 interface Props {
+  glass?: VustGlassValue;
   /** 对话框是否显示 */
   visible: boolean;
   /** 对话框标题 */
@@ -24,6 +27,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  glass: undefined,
   width: "500px",
   closeOnClickOverlay: true,
   zIndex: "var(--vdl-z-index-modal)",
@@ -53,6 +57,7 @@ watch(
   { immediate: true },
 );
 onBeforeUnmount(() => deactivate?.());
+const vGlass = useGlass(() => props.glass, "surface");
 </script>
 
 <template>
@@ -67,6 +72,7 @@ onBeforeUnmount(() => deactivate?.());
       >
         <div
           ref="cardRef"
+          v-glass
           class="vl-dialog-card"
           :style="{ width, maxWidth: '95%' }"
           role="dialog"
@@ -105,8 +111,8 @@ onBeforeUnmount(() => deactivate?.());
 .vl-dialog-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(8, 12, 24, 0.65);
-  backdrop-filter: blur(4px);
+  background: var(--vdl-bg-backdrop);
+  backdrop-filter: none;
   display: flex;
   justify-content: center;
   align-items: center;

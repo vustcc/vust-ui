@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { VustGlassValue } from "../glass";
+import { useGlass } from "../internal/use-glass";
 import {
   ref,
   watch,
@@ -22,21 +24,25 @@ interface Option {
   hint?: string;
 }
 
-const props = defineProps<{
-  /** 绑定值 */
-  modelValue: string | number | null;
-  /** 选项列表 */
-  options: Option[];
-  /** 占位符 */
-  placeholder?: string;
-  /** 是否禁用 */
-  disabled?: boolean;
-  id?: string;
-  name?: string;
-  ariaLabel?: string;
-  ariaLabelledby?: string;
-  ariaDescribedby?: string;
-}>();
+const props = withDefaults(
+  defineProps<{
+    glass?: VustGlassValue;
+    /** 绑定值 */
+    modelValue: string | number | null;
+    /** 选项列表 */
+    options: Option[];
+    /** 占位符 */
+    placeholder?: string;
+    /** 是否禁用 */
+    disabled?: boolean;
+    id?: string;
+    name?: string;
+    ariaLabel?: string;
+    ariaLabelledby?: string;
+    ariaDescribedby?: string;
+  }>(),
+  { glass: undefined },
+);
 
 const emit = defineEmits<{
   (e: "update:modelValue", value: string | number | null): void;
@@ -195,6 +201,7 @@ onUnmounted(() => {
   window.removeEventListener("resize", calculatePosition);
   window.removeEventListener("scroll", calculatePosition, true);
 });
+const vGlass = useGlass(() => props.glass, "input");
 </script>
 
 <template>
@@ -206,6 +213,7 @@ onUnmounted(() => {
     <button
       :id="resolvedId"
       type="button"
+      v-glass
       class="vl-select-trigger"
       role="combobox"
       :disabled="disabled"
@@ -233,6 +241,7 @@ onUnmounted(() => {
         <ul
           v-if="isOpen"
           ref="dropdownRef"
+          v-glass
           class="vl-select-options"
           :id="listboxId"
           role="listbox"

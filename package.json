@@ -17,7 +17,12 @@
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
     "test:e2e:update": "playwright test --update-snapshots",
-    "check": "pnpm format:check && pnpm type-check && pnpm build && pnpm test:unit && pnpm test:consumer && pnpm pack:check"
+    "check": "pnpm format:check && pnpm type-check && pnpm build && pnpm test:unit && pnpm test:consumer && pnpm pack:check",
+    "type-check:vue": "pnpm --filter @vustcc/tokens build && pnpm --filter @vustcc/vue type-check",
+    "build:vue": "pnpm --filter @vustcc/tokens build && pnpm --filter @vustcc/vue build",
+    "test:unit:vue": "vitest run --config vitest.vue.config.ts",
+    "test:e2e:vue": "playwright test --config playwright.vue.config.ts",
+    "check:vue": "pnpm type-check:vue && pnpm build:vue && pnpm test:unit:vue && pnpm -C playground build"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.1",

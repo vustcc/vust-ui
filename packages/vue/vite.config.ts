@@ -20,7 +20,12 @@ export default defineConfig({
       cssFileName: "style",
     },
     rollupOptions: {
-      external: ["vue", "@vustcc/icons", "@vustcc/tokens"],
+      external: [
+        "vue",
+        "@vustcc/icons",
+        "@vustcc/tokens",
+        "@vustcc/tokens/glass",
+      ],
     },
     emptyOutDir: true,
   },

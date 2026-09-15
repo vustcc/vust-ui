@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { VustGlassValue } from "../glass";
+import { useGlass } from "../internal/use-glass";
 import { computed, ref, useId } from "vue";
 import VustIcon from "./VustIcon.vue";
 
@@ -8,6 +10,7 @@ import VustIcon from "./VustIcon.vue";
  */
 
 interface Props {
+  glass?: VustGlassValue;
   /** 绑定值 */
   modelValue: string | number | null;
   /** 输入类型 */
@@ -41,6 +44,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  glass: undefined,
   type: "text",
   disabled: false,
   readonly: false,
@@ -93,6 +97,7 @@ const inputType = computed(() => {
   }
   return props.type;
 });
+const vGlass = useGlass(() => props.glass, "input");
 </script>
 
 <template>
@@ -102,6 +107,7 @@ const inputType = computed(() => {
   >
     <template v-if="type === 'textarea'">
       <textarea
+        v-glass
         class="vl-textarea"
         :id="resolvedId"
         :name="name"
@@ -122,7 +128,7 @@ const inputType = computed(() => {
       ></textarea>
     </template>
     <template v-else>
-      <div class="vl-input-inner-wrapper">
+      <div v-glass class="vl-input-inner-wrapper">
         <input
           class="vl-input"
           :id="resolvedId"

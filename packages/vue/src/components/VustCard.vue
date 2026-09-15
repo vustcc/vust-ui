@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { VustGlassValue } from "../glass";
+import { useGlass } from "../internal/use-glass";
 import type { CSSProperties } from "vue";
 
 /**
@@ -7,6 +9,7 @@ import type { CSSProperties } from "vue";
  */
 
 interface Props {
+  glass?: VustGlassValue;
   /** 阴影显示时机 */
   shadow?: "always" | "hover" | "never";
   /** 内容区自定义样式 */
@@ -17,15 +20,18 @@ interface Props {
   fullHeight?: boolean;
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
+  glass: undefined,
   shadow: "always",
   contentRole: "content",
   fullHeight: false,
 });
+const vGlass = useGlass(() => props.glass, "surface");
 </script>
 
 <template>
   <div
+    v-glass
     class="vl-card"
     :class="[`is-shadow-${shadow}`, { 'is-full-height': fullHeight }]"
   >

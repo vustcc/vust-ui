@@ -2,6 +2,14 @@
 
 格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，并遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
+## [Unreleased]
+
+### Added
+
+- 新增 `--vdl-glass-*` 共享材质预设和光学参数，由主 CSS 入口自动导入。
+- 新增 `glass.css` 独立入口与 `glass` JS/类型入口；JS 默认值从同一 CSS 源生成。
+- 保留原有背景、主题及状态 Token 的默认行为。
+
 ## [0.1.0-alpha.1] - 2026-09-10
 
 ### Added

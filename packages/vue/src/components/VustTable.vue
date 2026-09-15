@@ -1,4 +1,6 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
+import type { VustGlassValue } from "../glass";
+import { useGlass } from "../internal/use-glass";
 /**
  * @file VustTable.vue
  * @description VUST 平台自研表格组件，严格遵循 VDL 设计规范。
@@ -25,6 +27,7 @@ export interface VustTableColumn {
 
 const props = withDefaults(
   defineProps<{
+    glass?: VustGlassValue;
     /** 表格数据 */
     data: T[];
     /** 列配置 */
@@ -49,6 +52,7 @@ const props = withDefaults(
     selectionColumnWidth?: number;
   }>(),
   {
+    glass: undefined,
     border: false,
     emptyText: "暂无数据",
     selectable: false,
@@ -185,10 +189,12 @@ function updatePageSelection(selected: boolean) {
   }
   updateSelection([...next]);
 }
+const vGlass = useGlass(() => props.glass, "surface");
 </script>
 
 <template>
   <div
+    v-glass
     class="vl-table-container"
     :class="{ 'vl-table-border': border }"
     data-native-context-menu
@@ -209,6 +215,7 @@ function updatePageSelection(selected: boolean) {
             >
               <div class="vl-cell vl-table-selection-control">
                 <VustCheckbox
+                  :glass="false"
                   :model-value="allPageRowsSelected"
                   :indeterminate="somePageRowsSelected"
                   :disabled="selectableRows.length === 0"
@@ -269,6 +276,7 @@ function updatePageSelection(selected: boolean) {
               >
                 <div class="vl-cell vl-table-selection-control">
                   <VustCheckbox
+                    :glass="false"
                     :model-value="
                       selectedKeySet.has(resolveRowKey(row, rowIndex))
                     "

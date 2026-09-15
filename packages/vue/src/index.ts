@@ -62,3 +62,6 @@ export {
   VustSelectionBar,
   VustDateTimeRangePicker,
 };
+
+export { default as VustGlassProvider } from "./components/VustGlassProvider.vue";
+export type { VustGlassOptions, VustGlassValue, VustGlassMode } from "./glass";
