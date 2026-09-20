@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## [0.1.0-alpha.2] - 2026-09-20
+
 ### Added
 
 - 为适用组件增加可响应式调节的 Liquid Glass 默认材质与 `glass` 接口。

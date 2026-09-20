@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## [0.1.0-alpha.2] - 2026-09-20
+
 ### Added
 
 - 主题同步载荷新增可选的 `glassEnabled`，并通过根节点的 `data-glass` 属性应用材质偏好。
