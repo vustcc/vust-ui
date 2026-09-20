@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback, useId } from "react";
 import { createPortal } from "react-dom";
+import type { VustGlassValue } from "../../glass";
+import { useGlass } from "../../internal/use-glass";
 import "./VustTooltip.css";
 
 export type TooltipPosition = "top" | "bottom" | "left" | "right";
@@ -15,6 +17,8 @@ export interface VustTooltipProps extends React.HTMLAttributes<HTMLDivElement> {
   disabled?: boolean;
   /** 子元素 */
   children: React.ReactNode;
+  /** 液态玻璃材质配置 */
+  glass?: VustGlassValue;
 }
 
 export const VustTooltip: React.FC<VustTooltipProps> = ({
@@ -23,6 +27,7 @@ export const VustTooltip: React.FC<VustTooltipProps> = ({
   delay = 200,
   children,
   disabled = false,
+  glass,
   className = "",
   ...rest
 }) => {
@@ -35,6 +40,7 @@ export const VustTooltip: React.FC<VustTooltipProps> = ({
 
   const triggerRef = useRef<HTMLDivElement | null>(null);
   const tooltipRef = useRef<HTMLDivElement | null>(null);
+  const tooltipGlassRef = useGlass<HTMLDivElement>(glass, "surface");
 
   const timerRef = useRef<any>(null);
   const animationTimerRef = useRef<any>(null);
@@ -131,11 +137,12 @@ export const VustTooltip: React.FC<VustTooltipProps> = ({
   const setTooltipRef = useCallback(
     (node: HTMLDivElement | null) => {
       tooltipRef.current = node;
+      tooltipGlassRef(node);
       if (node) {
         calculatePosition(node);
       }
     },
-    [calculatePosition],
+    [calculatePosition, tooltipGlassRef],
   );
 
   const handleMouseEnter = () => {

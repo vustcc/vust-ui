@@ -7,6 +7,8 @@ import React, {
 } from "react";
 import { createPortal } from "react-dom";
 import { computeFloatingPosition } from "../../internal/floating-position";
+import type { VustGlassValue } from "../../glass";
+import { useGlass } from "../../internal/use-glass";
 import "./VustDateTimeRangePicker.css";
 
 export interface DateTimeRangeValue {
@@ -55,6 +57,8 @@ export interface VustDateTimeRangePickerProps extends Omit<
   onChange?: (value: DateTimeRangeValue) => void;
   /** 点击确认应用时的回调 */
   onApply?: (value: DateTimeRangeValue) => void;
+  /** 液态玻璃材质配置 */
+  glass?: VustGlassValue;
 }
 
 // --- Date Utils ---
@@ -151,11 +155,14 @@ export const VustDateTimeRangePicker: React.FC<
   disabled = false,
   onChange,
   onApply,
+  glass,
   className = "",
   ...rest
 }) => {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const triggerGlassRef = useGlass<HTMLButtonElement>(glass, "input");
+  const panelGlassRef = useGlass<HTMLDivElement>(glass, "input");
   const [isOpen, setIsOpen] = useState(false);
   const [activeBoundary, setActiveBoundary] = useState<"start" | "end">(
     "start",
@@ -406,7 +413,10 @@ export const VustDateTimeRangePicker: React.FC<
       {...rest}
     >
       <button
-        ref={triggerRef}
+        ref={(node) => {
+          triggerRef.current = node;
+          triggerGlassRef(node);
+        }}
         type="button"
         className={`range-trigger ${!value.startAt && !value.endAt ? "is-placeholder" : ""}`.trim()}
         disabled={disabled}
@@ -418,7 +428,10 @@ export const VustDateTimeRangePicker: React.FC<
       {isOpen &&
         createPortal(
           <div
-            ref={panelRef}
+            ref={(node) => {
+              panelRef.current = node;
+              panelGlassRef(node);
+            }}
             className="range-panel"
             style={panelStyle}
             data-placement={panelPlacement}

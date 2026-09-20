@@ -1,4 +1,6 @@
 import React from "react";
+import type { VustGlassValue } from "../../glass";
+import { useGlass } from "../../internal/use-glass";
 import "./VustDescriptions.css";
 
 export interface DescriptionItem {
@@ -25,6 +27,8 @@ export interface VustDescriptionsProps extends React.HTMLAttributes<HTMLDivEleme
     string,
     (item: DescriptionItem, data?: any) => React.ReactNode
   >;
+  /** 液态玻璃材质配置 */
+  glass?: VustGlassValue;
 }
 
 export const VustDescriptions: React.FC<VustDescriptionsProps> = ({
@@ -34,9 +38,11 @@ export const VustDescriptions: React.FC<VustDescriptionsProps> = ({
   column = 1,
   border = false,
   slots,
+  glass,
   className = "",
   ...rest
 }) => {
+  const glassRef = useGlass<HTMLDivElement>(glass, "surface");
   const renderContent = (item: DescriptionItem) => {
     if (item.render) {
       return item.render(item, data);
@@ -73,6 +79,7 @@ export const VustDescriptions: React.FC<VustDescriptionsProps> = ({
     >
       {title && <div className="vl-descriptions-title">{title}</div>}
       <div
+        ref={glassRef}
         className="vl-descriptions-grid"
         style={{ gridTemplateColumns: `repeat(${column}, 1fr)` }}
       >

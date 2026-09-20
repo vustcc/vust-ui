@@ -1,8 +1,8 @@
 .vl-dialog-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(8, 12, 24, 0.65);
-  backdrop-filter: blur(4px);
+  background: var(--vdl-bg-backdrop);
+  backdrop-filter: none;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -10,7 +10,8 @@
 }
 
 .vl-dialog-card {
-  background-color: var(--vdl-bg-panel);
+  position: relative;
+  background-color: transparent;
   border-radius: var(--vdl-radius-lg);
   border: 1px solid var(--vdl-border-strong);
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
@@ -21,7 +22,18 @@
   animation: vl-dialog-pop 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+.vl-dialog-glass-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background-color: var(--vdl-bg-panel);
+  pointer-events: none;
+}
+
 .vl-dialog-header {
+  position: relative;
+  z-index: 1;
   padding: var(--vdl-space-4) var(--vdl-space-4);
   background-color: var(--vdl-bg-muted);
   border-bottom: 1px solid var(--vdl-border-subtle);
@@ -54,6 +66,8 @@
 }
 
 .vl-dialog-body {
+  position: relative;
+  z-index: 1;
   padding: var(--vdl-space-4);
   overflow-y: auto;
   flex: 1;
@@ -61,6 +75,8 @@
 }
 
 .vl-dialog-footer {
+  position: relative;
+  z-index: 1;
   padding: var(--vdl-space-4) var(--vdl-space-4);
   background-color: var(--vdl-bg-muted);
   border-top: 1px solid var(--vdl-border-subtle);

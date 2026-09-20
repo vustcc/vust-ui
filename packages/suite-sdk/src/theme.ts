@@ -33,6 +33,7 @@ export function normalizeTheme(
     return {
       theme: isThemeMode(input) ? input : "auto",
       resolvedTheme: input === "auto" ? resolveSystemTheme() : input,
+      glassEnabled: true,
     };
   }
 
@@ -40,6 +41,7 @@ export function normalizeTheme(
     return {
       theme: "auto",
       resolvedTheme: resolveSystemTheme(),
+      glassEnabled: true,
     };
   }
 
@@ -51,6 +53,8 @@ export function normalizeTheme(
         : input.theme === "dark"
           ? "dark"
           : "light",
+    glassEnabled:
+      typeof input.glassEnabled === "boolean" ? input.glassEnabled : true,
   };
 }
 
@@ -58,8 +62,10 @@ export function resolveThemeState(
   input: SuiteThemeMode | SuiteThemePayload,
   source: SuiteThemeSource,
 ): SuiteThemeState {
+  const normalized = normalizeTheme(input);
   return {
-    ...normalizeTheme(input),
+    ...normalized,
+    glassEnabled: normalized.glassEnabled ?? true,
     source,
   };
 }
@@ -70,5 +76,6 @@ export function applyThemeToTarget(
 ) {
   const element = "documentElement" in target ? target.documentElement : target;
   element.dataset.theme = theme.resolvedTheme;
+  element.dataset.glass = theme.glassEnabled ? "enabled" : "disabled";
   element.style.colorScheme = theme.resolvedTheme;
 }

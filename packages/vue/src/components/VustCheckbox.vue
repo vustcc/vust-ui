@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { VustGlassValue } from "../glass";
+import { useGlass } from "../internal/use-glass";
 import { computed, ref, useId, watchEffect } from "vue";
 /**
  * @file VustCheckbox.vue
@@ -6,6 +8,7 @@ import { computed, ref, useId, watchEffect } from "vue";
  */
 
 interface Props {
+  glass?: VustGlassValue;
   /** 绑定值 */
   modelValue: boolean;
   /** 禁用状态 */
@@ -19,6 +22,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  glass: undefined,
   disabled: false,
 });
 
@@ -40,6 +44,7 @@ function toggle() {
   emit("update:modelValue", newValue);
   emit("change", newValue);
 }
+const vGlass = useGlass(() => props.glass, "input");
 </script>
 
 <template>
@@ -67,7 +72,7 @@ function toggle() {
         :aria-checked="indeterminate ? 'mixed' : modelValue"
         @change="toggle"
       />
-      <span class="vl-checkbox-inner"></span>
+      <span v-glass class="vl-checkbox-inner"></span>
     </span>
     <span v-if="$slots.default" class="vl-checkbox-label">
       <slot></slot>
@@ -154,18 +159,18 @@ function toggle() {
   transition: transform 0.15s ease-in;
 }
 
-.vl-checkbox.is-active .vl-checkbox-inner {
-  background-color: var(--vdl-primary);
+.vl-checkbox.is-active .vl-checkbox-inner,
+.vl-checkbox.is-indeterminate .vl-checkbox-inner {
   border-color: var(--vdl-primary);
+}
+
+.vl-checkbox.is-active .vl-checkbox-inner[data-glass-mode="solid"],
+.vl-checkbox.is-indeterminate .vl-checkbox-inner[data-glass-mode="solid"] {
+  background-color: var(--vdl-primary);
 }
 
 .vl-checkbox.is-active .vl-checkbox-inner::after {
   transform: rotate(45deg) scaleY(1);
-}
-
-.vl-checkbox.is-indeterminate .vl-checkbox-inner {
-  background-color: var(--vdl-primary);
-  border-color: var(--vdl-primary);
 }
 
 .vl-checkbox.is-indeterminate .vl-checkbox-inner::before {

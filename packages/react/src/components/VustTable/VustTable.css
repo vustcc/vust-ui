@@ -13,7 +13,6 @@
   flex: 1;
   min-height: 0;
   overflow: auto;
-  scrollbar-width: thin;
 }
 
 .vl-table {
@@ -22,6 +21,15 @@
   border-spacing: 0;
   border-collapse: separate;
   table-layout: auto;
+}
+
+.vl-table.is-empty {
+  height: 100%;
+}
+
+.vl-table.is-empty tbody,
+.vl-table.is-empty tbody > tr {
+  height: 100%;
 }
 
 /* 表头样式 */
@@ -41,7 +49,7 @@
 
 /* 单元格通用样式 */
 .vl-table-cell {
-  background-color: transparent;
+  background-color: var(--vdl-bg-base);
   color: var(--vdl-text-primary);
   font-size: var(--vdl-font-body-sm);
   font-weight: 500;
@@ -88,6 +96,11 @@
   border-right: 1px solid var(--vdl-border-default);
 }
 
+.vl-table-cell.is-fixed-left,
+.vl-table-cell.is-fixed-right {
+  background-color: var(--vdl-bg-base);
+}
+
 .vl-table-border .vl-table-header-cell:last-child,
 .vl-table-border .vl-table-cell:last-child {
   border-right: none;
@@ -108,14 +121,17 @@
 }
 .vl-table-header-cell.is-fixed-left {
   z-index: 30;
+  background-color: var(--vdl-bg-muted);
 }
 
 .vl-table-header-cell.is-fixed-right {
   z-index: 30;
+  background-color: var(--vdl-bg-muted);
 }
 
 /* 空状态样式 */
 .vl-table-empty-cell {
+  height: 100%;
   padding: var(--vdl-space-8) 0;
   text-align: center;
 }
@@ -123,19 +139,4 @@
 .vl-table-empty {
   color: var(--vdl-text-muted);
   font-size: var(--vdl-font-body-sm);
-}
-
-/* 滚动条美化 */
-.vl-table-wrapper::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-.vl-table-wrapper::-webkit-scrollbar-thumb {
-  background: var(--vdl-scrollbar-thumb);
-  border-radius: var(--vdl-radius-pill);
-}
-
-.vl-table-wrapper::-webkit-scrollbar-track {
-  background: var(--vdl-scrollbar-track);
 }

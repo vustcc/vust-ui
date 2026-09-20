@@ -61,7 +61,6 @@
   width: max-content;
   overflow-y: auto;
   box-sizing: border-box;
-  scrollbar-width: thin;
   list-style: none;
   padding: var(--vdl-space-1);
   margin: 0;

@@ -1,4 +1,6 @@
 import React, { useId, useState } from "react";
+import type { VustGlassValue } from "../../glass";
+import { useGlass } from "../../internal/use-glass";
 import { VustIcon } from "../VustIcon/VustIcon";
 import "./VustInput.css";
 
@@ -47,6 +49,7 @@ export interface VustInputProps<
   ariaLabel?: string;
   ariaLabelledby?: string;
   ariaDescribedby?: string;
+  glass?: VustGlassValue;
   /** focus 事件 */
   onFocus?: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
   /** blur 事件 */
@@ -75,9 +78,14 @@ export function VustInput<T extends string | number | null = string>({
   ariaLabel,
   ariaLabelledby,
   ariaDescribedby,
+  glass,
   className = "",
   ...rest
 }: VustInputProps<T>) {
+  const glassRef = useGlass<HTMLDivElement | HTMLTextAreaElement>(
+    glass,
+    "input",
+  );
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const generatedId = useId();
   const resolvedId = id ?? generatedId;
@@ -111,6 +119,7 @@ export function VustInput<T extends string | number | null = string>({
     >
       {type === "textarea" ? (
         <textarea
+          ref={glassRef}
           className="vl-textarea"
           id={resolvedId}
           name={name}
@@ -129,7 +138,7 @@ export function VustInput<T extends string | number | null = string>({
           aria-invalid={invalid || undefined}
         />
       ) : (
-        <div className="vl-input-inner-wrapper">
+        <div ref={glassRef} className="vl-input-inner-wrapper">
           <input
             className="vl-input"
             id={resolvedId}

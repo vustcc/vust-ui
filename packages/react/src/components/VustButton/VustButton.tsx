@@ -1,4 +1,6 @@
 import React from "react";
+import type { VustGlassValue } from "../../glass";
+import { useGlass } from "../../internal/use-glass";
 import "./VustButton.css";
 
 export interface VustButtonProps extends Omit<
@@ -9,6 +11,7 @@ export interface VustButtonProps extends Omit<
   size?: "small" | "default" | "large";
   disabled?: boolean;
   loading?: boolean;
+  glass?: VustGlassValue;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   children?: React.ReactNode;
 }
@@ -18,11 +21,13 @@ export const VustButton: React.FC<VustButtonProps> = ({
   size = "default",
   disabled = false,
   loading = false,
+  glass,
   onClick,
   className = "",
   children,
   ...rest
 }) => {
+  const glassRef = useGlass<HTMLButtonElement>(glass, "control");
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (disabled || loading) return;
     onClick?.(event);
@@ -32,6 +37,7 @@ export const VustButton: React.FC<VustButtonProps> = ({
 
   return (
     <button
+      ref={glassRef}
       className={`vl-button vl-button--${type} vl-button--${size} ${loading ? "is-loading" : ""} ${className}`.trim()}
       disabled={isDisabled}
       type="button"

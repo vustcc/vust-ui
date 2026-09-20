@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { VustGlassValue } from "../glass";
+import { useGlass } from "../internal/use-glass";
 /**
  * @file VustTabs.vue
  * @description VUST 平台自研标签页组件，支持单选高亮，严格遵循 VDL 设计规范。
@@ -11,13 +13,14 @@ interface TabItem {
 }
 
 interface Props {
+  glass?: VustGlassValue;
   /** 当前选中的标签页 name */
   modelValue: string;
   /** 标签页列表 */
   tabs: TabItem[];
 }
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), { glass: undefined });
 
 const emit = defineEmits<{
   (e: "update:modelValue", value: string): void;
@@ -52,6 +55,7 @@ function handleKeydown(event: KeyboardEvent, index: number) {
       ?.focus();
   }
 }
+const vGlass = useGlass(() => props.glass, "control");
 </script>
 
 <template>
@@ -61,6 +65,7 @@ function handleKeydown(event: KeyboardEvent, index: number) {
         v-for="(tab, index) in tabs"
         type="button"
         :key="tab.name"
+        v-glass="modelValue === tab.name"
         class="vl-tabs-item"
         :class="{
           'is-active': modelValue === tab.name,
@@ -105,7 +110,7 @@ function handleKeydown(event: KeyboardEvent, index: number) {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
   user-select: none;
-  padding: 0;
+  padding: 0 var(--vdl-space-4);
   border: 0;
   background: transparent;
 }

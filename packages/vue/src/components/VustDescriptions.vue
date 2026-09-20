@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { VustGlassValue } from "../glass";
+import { useGlass } from "../internal/use-glass";
 /**
  * @file VustDescriptions.vue
  * @description VUST 平台自研详情列表组件，用于展示键值对数据。
@@ -12,6 +14,7 @@ interface DescriptionItem {
 }
 
 interface Props {
+  glass?: VustGlassValue;
   /** 标题 */
   title?: string;
   /** 列表项配置 */
@@ -24,16 +27,19 @@ interface Props {
   border?: boolean;
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
+  glass: undefined,
   column: 1,
   border: false,
 });
+const vGlass = useGlass(() => props.glass, "surface");
 </script>
 
 <template>
   <div class="vl-descriptions" :class="{ 'is-border': border }">
     <div v-if="title" class="vl-descriptions-title">{{ title }}</div>
     <div
+      v-glass
       class="vl-descriptions-grid"
       :style="{ gridTemplateColumns: `repeat(${column}, 1fr)` }"
     >

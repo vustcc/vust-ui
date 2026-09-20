@@ -2,6 +2,19 @@
 
 格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，并遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
+## [Unreleased]
+
+### Added
+
+- 为适用组件增加可响应式调节的 Liquid Glass 默认材质与 `glass` 接口。
+- 增加 `VustGlassProvider`，统一管理材质并同步 Portal 浮层的主题与公共 Token。
+- 增加无业务布局的 `VustGlassSurface`，供产品壳层和套件自绘区域复用公共材质。
+
+### Fixed
+
+- 修复激活标签页玻璃底板紧贴文字或切换时尺寸跳动的问题。
+- 修复表格选择控件的材质状态，并确保固定列内容保持清晰。
+
 ## [0.1.0-alpha.1] - 2026-09-10
 
 ### Added

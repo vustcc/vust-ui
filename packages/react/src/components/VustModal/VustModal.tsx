@@ -1,6 +1,8 @@
 import React, { useEffect, useId, useRef } from "react";
 import { createPortal } from "react-dom";
 import { activateModalLifecycle } from "../../internal/modal-lifecycle";
+import type { VustGlassValue } from "../../glass";
+import { useGlass } from "../../internal/use-glass";
 import "./VustModal.css";
 
 export interface VustModalProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -20,6 +22,8 @@ export interface VustModalProps extends React.HTMLAttributes<HTMLDivElement> {
   onConfirm?: () => void;
   /** 取消回调 */
   onCancel?: () => void;
+  /** 液态玻璃材质配置 */
+  glass?: VustGlassValue;
 }
 
 export const VustModal: React.FC<VustModalProps> = ({
@@ -31,10 +35,12 @@ export const VustModal: React.FC<VustModalProps> = ({
   type = "primary",
   onConfirm,
   onCancel,
+  glass,
   className = "",
   ...rest
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
+  const glassRef = useGlass<HTMLDivElement>(glass, "surface");
   const titleId = useId();
   useEffect(() => {
     if (!visible || !cardRef.current) return;
@@ -56,7 +62,10 @@ export const VustModal: React.FC<VustModalProps> = ({
       {...rest}
     >
       <div
-        ref={cardRef}
+        ref={(node) => {
+          cardRef.current = node;
+          glassRef(node);
+        }}
         className="vl-modal-card"
         role="alertdialog"
         aria-modal="true"

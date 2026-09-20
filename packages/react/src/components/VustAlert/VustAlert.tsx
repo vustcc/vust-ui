@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import type { VustGlassValue } from "../../glass";
+import { useGlass } from "../../internal/use-glass";
 import { VustIcon } from "../VustIcon/VustIcon";
 import "./VustAlert.css";
 
@@ -19,6 +21,7 @@ export interface VustAlertProps extends React.HTMLAttributes<HTMLDivElement> {
   closeLabel?: string;
   /** 子元素，将作为 description 渲染 */
   children?: React.ReactNode;
+  glass?: VustGlassValue;
 }
 
 export const VustAlert: React.FC<VustAlertProps> = ({
@@ -31,8 +34,10 @@ export const VustAlert: React.FC<VustAlertProps> = ({
   closeLabel = "Close alert",
   className = "",
   children,
+  glass,
   ...rest
 }) => {
+  const glassRef = useGlass<HTMLDivElement>(glass, "surface");
   const [visible, setVisible] = useState(true);
 
   if (!visible) return null;
@@ -51,6 +56,7 @@ export const VustAlert: React.FC<VustAlertProps> = ({
 
   return (
     <div
+      ref={glassRef}
       className={`vl-alert is-${type} ${className}`.trim()}
       role="alert"
       {...rest}

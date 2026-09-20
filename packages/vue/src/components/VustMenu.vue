@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { VustGlassValue } from "../glass";
+import { useGlass } from "../internal/use-glass";
 import { ref } from "vue";
 /**
  * @file VustMenu.vue
@@ -17,13 +19,14 @@ interface MenuCategory {
 }
 
 interface Props {
+  glass?: VustGlassValue;
   /** 当前选中的菜单项 key */
   modelValue: string;
   /** 菜单项列表 (带分组) */
   items: MenuCategory[];
 }
 
-defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), { glass: undefined });
 
 const emit = defineEmits<{
   (e: "update:modelValue", value: string): void;
@@ -53,10 +56,17 @@ function handleKeydown(event: KeyboardEvent) {
   event.preventDefault();
   items[index]?.focus();
 }
+const vGlass = useGlass(() => props.glass, "surface");
 </script>
 
 <template>
-  <nav ref="menuRef" class="vl-menu" aria-label="Menu" @keydown="handleKeydown">
+  <nav
+    ref="menuRef"
+    v-glass
+    class="vl-menu"
+    aria-label="Menu"
+    @keydown="handleKeydown"
+  >
     <div v-for="category in items" :key="category.key" class="vl-menu-group">
       <div class="vl-menu-group-title">{{ category.label }}</div>
       <ul class="vl-menu-items">

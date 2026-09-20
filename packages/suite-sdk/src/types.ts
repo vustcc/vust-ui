@@ -65,12 +65,15 @@ export interface SuiteMessageError {
 export interface SuiteThemeState {
   theme: SuiteThemeMode;
   resolvedTheme: SuiteResolvedTheme;
+  glassEnabled: boolean;
   source: SuiteThemeSource;
 }
 
 export interface SuiteThemePayload {
   theme: SuiteThemeMode;
   resolvedTheme: SuiteResolvedTheme;
+  /** 主控 Liquid Glass 偏好；旧载荷缺省时按开启处理。 */
+  glassEnabled?: boolean;
 }
 
 export interface SuiteLocaleState {

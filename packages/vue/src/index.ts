@@ -25,6 +25,7 @@ import VustSelect from "./components/VustSelect.vue";
 import VustTable from "./components/VustTable.vue";
 import VustSelectionBar from "./components/VustSelectionBar.vue";
 import VustDateTimeRangePicker from "./components/VustDateTimeRangePicker.vue";
+import VustGlassSurface from "./components/VustGlassSurface.vue";
 
 export type { ToastItem } from "./components/VustToast.vue";
 export type {
@@ -61,4 +62,13 @@ export {
   VustTable,
   VustSelectionBar,
   VustDateTimeRangePicker,
+  VustGlassSurface,
 };
+
+export { default as VustGlassProvider } from "./components/VustGlassProvider.vue";
+export type {
+  VustGlassOptions,
+  VustGlassValue,
+  VustGlassMode,
+  VustGlassProfile,
+} from "./glass";

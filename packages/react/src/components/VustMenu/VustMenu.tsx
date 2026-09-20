@@ -1,4 +1,6 @@
-import React, { useRef } from "react";
+import React from "react";
+import type { VustGlassValue } from "../../glass";
+import { useGlass } from "../../internal/use-glass";
 import "./VustMenu.css";
 
 export interface MenuItem {
@@ -22,25 +24,27 @@ export interface VustMenuProps extends Omit<
   items: MenuCategory[];
   /** 绑定值改变事件 */
   onChange?: (key: string) => void;
+  glass?: VustGlassValue;
 }
 
 export const VustMenu: React.FC<VustMenuProps> = ({
   value,
   items = [],
   onChange,
+  glass,
   className = "",
   ...rest
 }) => {
-  const menuRef = useRef<HTMLElement>(null);
+  const glassRef = useGlass<HTMLElement>(glass, "surface");
   const handleSelect = (key: string) => {
     onChange?.(key);
   };
   const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
     if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
     const buttons = [
-      ...(menuRef.current?.querySelectorAll<HTMLButtonElement>(
+      ...event.currentTarget.querySelectorAll<HTMLButtonElement>(
         ".vl-menu-item-button",
-      ) ?? []),
+      ),
     ];
     const current = buttons.indexOf(
       document.activeElement as HTMLButtonElement,
@@ -58,7 +62,7 @@ export const VustMenu: React.FC<VustMenuProps> = ({
 
   return (
     <nav
-      ref={menuRef}
+      ref={glassRef}
       className={`vl-menu ${className}`.trim()}
       aria-label="Menu"
       onKeyDown={handleKeyDown}

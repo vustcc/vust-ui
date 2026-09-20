@@ -1,4 +1,6 @@
 import React, { useEffect, useId, useRef } from "react";
+import type { VustGlassValue } from "../../glass";
+import { useGlass } from "../../internal/use-glass";
 import "./VustCheckbox.css";
 
 export interface VustCheckboxProps extends Omit<
@@ -17,6 +19,7 @@ export interface VustCheckboxProps extends Omit<
   ariaLabel?: string;
   ariaLabelledby?: string;
   ariaDescribedby?: string;
+  glass?: VustGlassValue;
 }
 
 export const VustCheckbox: React.FC<VustCheckboxProps> = ({
@@ -29,11 +32,13 @@ export const VustCheckbox: React.FC<VustCheckboxProps> = ({
   ariaLabel,
   ariaLabelledby,
   ariaDescribedby,
+  glass,
   className = "",
   children,
   ...rest
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const glassRef = useGlass<HTMLSpanElement>(glass, "input");
   const generatedId = useId();
   const resolvedId = id ?? generatedId;
   useEffect(() => {
@@ -67,7 +72,7 @@ export const VustCheckbox: React.FC<VustCheckboxProps> = ({
           onChange={handleChange}
           aria-checked={indeterminate ? "mixed" : checked}
         />
-        <span className="vl-checkbox-inner" />
+        <span ref={glassRef} className="vl-checkbox-inner" />
       </span>
       {children && <span className="vl-checkbox-label">{children}</span>}
     </label>

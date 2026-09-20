@@ -1,4 +1,6 @@
 import React from "react";
+import type { VustGlassValue } from "../../glass";
+import { useGlass } from "../../internal/use-glass";
 import "./VustCard.css";
 
 export interface VustCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -14,6 +16,7 @@ export interface VustCardProps extends React.HTMLAttributes<HTMLDivElement> {
   header?: React.ReactNode;
   /** 子元素，卡片内容 */
   children?: React.ReactNode;
+  glass?: VustGlassValue;
 }
 
 export const VustCard: React.FC<VustCardProps> = ({
@@ -24,10 +27,13 @@ export const VustCard: React.FC<VustCardProps> = ({
   header,
   className = "",
   children,
+  glass,
   ...rest
 }) => {
+  const glassRef = useGlass<HTMLDivElement>(glass, "surface");
   return (
     <div
+      ref={glassRef}
       className={`vl-card is-shadow-${shadow} ${
         fullHeight ? "is-full-height" : ""
       } ${className}`.trim()}

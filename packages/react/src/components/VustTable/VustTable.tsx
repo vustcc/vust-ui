@@ -1,5 +1,7 @@
 import React from "react";
 import { VustCheckbox } from "../VustCheckbox/VustCheckbox";
+import type { VustGlassValue } from "../../glass";
+import { useGlass } from "../../internal/use-glass";
 import "./VustTable.css";
 
 export interface VustTableColumn<T = any> {
@@ -76,6 +78,8 @@ export interface VustTableProps<
   selectRowLabel?: string | ((row: T, index: number) => string);
   /** 选择列宽度。 */
   selectionColumnWidth?: number;
+  /** 液态玻璃材质配置 */
+  glass?: VustGlassValue;
 }
 
 const formatWidth = (width?: string | number) => {
@@ -118,9 +122,11 @@ export function VustTable<T extends Record<string, any>>({
   selectAllLabel = "Select all rows on this page",
   selectRowLabel = "Select row",
   selectionColumnWidth = 48,
+  glass,
   className = "",
   ...rest
 }: VustTableProps<T>) {
+  const glassRef = useGlass<HTMLDivElement>(glass, "surface");
   const fixedOffset = (index: number, side: "left" | "right") => {
     const range =
       side === "left" ? columns.slice(0, index) : columns.slice(index + 1);
@@ -198,12 +204,15 @@ export function VustTable<T extends Record<string, any>>({
   };
   return (
     <div
+      ref={glassRef}
       className={`vl-table-container ${border ? "vl-table-border" : ""} ${className}`.trim()}
       data-native-context-menu="true"
       {...rest}
     >
       <div className="vl-table-wrapper">
-        <table className="vl-table">
+        <table
+          className={`vl-table ${data.length === 0 ? "is-empty" : ""}`.trim()}
+        >
           <thead>
             <tr className="vl-table-header-row">
               {selectable && (
@@ -218,6 +227,7 @@ export function VustTable<T extends Record<string, any>>({
                 >
                   <div className="vl-cell vl-table-selection-control">
                     <VustCheckbox
+                      glass={glass}
                       checked={allPageRowsSelected}
                       indeterminate={somePageRowsSelected}
                       disabled={selectableRows.length === 0}
@@ -280,6 +290,7 @@ export function VustTable<T extends Record<string, any>>({
                     >
                       <div className="vl-cell vl-table-selection-control">
                         <VustCheckbox
+                          glass={glass}
                           checked={selectedKeySet.has(
                             resolveRowKey(row, rowIndex),
                           )}

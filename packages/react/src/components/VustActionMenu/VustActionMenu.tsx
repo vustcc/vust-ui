@@ -4,6 +4,8 @@ import { VustIcon } from "../VustIcon/VustIcon";
 import { VustTooltip } from "../VustTooltip/VustTooltip";
 import "./VustActionMenu.css";
 import { computeFloatingPosition } from "../../internal/floating-position";
+import type { VustGlassValue } from "../../glass";
+import { useGlass } from "../../internal/use-glass";
 
 const ACTION_MENU_OPEN_EVENT = "vust-action-menu-open";
 
@@ -25,6 +27,8 @@ export interface VustActionMenuProps extends React.HTMLAttributes<HTMLDivElement
   disabled?: boolean;
   /** 菜单项默认图标 */
   defaultIcon?: string;
+  /** 液态玻璃材质配置 */
+  glass?: VustGlassValue;
 }
 
 export const VustActionMenu: React.FC<VustActionMenuProps> = ({
@@ -32,6 +36,7 @@ export const VustActionMenu: React.FC<VustActionMenuProps> = ({
   label = "操作",
   disabled = false,
   defaultIcon = "settings",
+  glass,
   className = "",
   ...rest
 }) => {
@@ -43,6 +48,8 @@ export const VustActionMenu: React.FC<VustActionMenuProps> = ({
   );
   const menuRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const triggerGlassRef = useGlass<HTMLButtonElement>(glass, "control");
+  const dropdownGlassRef = useGlass<HTMLDivElement>(glass, "control");
 
   const updateDropdownPosition = useCallback(() => {
     if (!menuRef.current || !dropdownRef.current || !showMenu) return;
@@ -173,6 +180,7 @@ export const VustActionMenu: React.FC<VustActionMenuProps> = ({
       {...rest}
     >
       <button
+        ref={triggerGlassRef}
         type="button"
         className="vl-action-btn"
         disabled={disabled}
@@ -188,7 +196,10 @@ export const VustActionMenu: React.FC<VustActionMenuProps> = ({
       {showMenu &&
         createPortal(
           <div
-            ref={dropdownRef}
+            ref={(node) => {
+              dropdownRef.current = node;
+              dropdownGlassRef(node);
+            }}
             className={`vl-dropdown ${dropdownPositioned ? "is-positioned" : ""}`.trim()}
             role="menu"
             style={dropdownStyle}
@@ -222,6 +233,7 @@ export const VustActionMenu: React.FC<VustActionMenuProps> = ({
                   text={action.tooltip || ""}
                   disabled={!action.tooltip}
                   position="right"
+                  glass={glass}
                   className="vl-dropdown-tooltip-wrapper"
                 >
                   {buttonNode}

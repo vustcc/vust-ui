@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { VustGlassValue } from "../glass";
+import { useGlass } from "../internal/use-glass";
 import { nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 
 /**
@@ -21,6 +23,7 @@ interface Action {
 
 const props = withDefaults(
   defineProps<{
+    glass?: VustGlassValue;
     /** 操作列表 */
     actions: Action[];
     /** 按钮文案 */
@@ -31,6 +34,7 @@ const props = withDefaults(
     defaultIcon?: string;
   }>(),
   {
+    glass: undefined,
     disabled: false,
     defaultIcon: "settings",
   },
@@ -146,12 +150,14 @@ onBeforeUnmount(() => {
   window.removeEventListener("resize", updateDropdownPosition);
   window.removeEventListener("scroll", updateDropdownPosition, true);
 });
+const vGlass = useGlass(() => props.glass, "control");
 </script>
 
 <template>
   <div class="vl-action-menu" ref="menuRef">
     <button
       type="button"
+      v-glass
       class="vl-action-btn"
       :disabled="disabled"
       aria-haspopup="menu"
@@ -167,6 +173,7 @@ onBeforeUnmount(() => {
         <div
           v-if="showMenu"
           ref="dropdownRef"
+          v-glass
           class="vl-dropdown"
           :class="{ 'is-positioned': dropdownPositioned }"
           role="menu"
@@ -177,6 +184,7 @@ onBeforeUnmount(() => {
         >
           <template v-for="(action, index) in actions" :key="index">
             <VustTooltip
+              :glass="glass"
               :text="action.tooltip || ''"
               :disabled="!action.tooltip"
               position="right"

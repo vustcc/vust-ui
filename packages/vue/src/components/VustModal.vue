@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { VustGlassValue } from "../glass";
+import { useGlass } from "../internal/use-glass";
 import { nextTick, onBeforeUnmount, ref, watch } from "vue";
 import { activateModalLifecycle } from "../internal/modal-lifecycle";
 defineOptions({
@@ -10,6 +12,7 @@ defineOptions({
  */
 
 interface Props {
+  glass?: VustGlassValue;
   /** 是否可见 */
   visible: boolean;
   /** 标题 */
@@ -25,6 +28,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  glass: undefined,
   confirmText: "确定",
   cancelText: "取消",
   type: "primary",
@@ -53,6 +57,7 @@ watch(
   { immediate: true },
 );
 onBeforeUnmount(() => deactivate?.());
+const vGlass = useGlass(() => props.glass, "surface");
 </script>
 
 <template>
@@ -66,6 +71,7 @@ onBeforeUnmount(() => deactivate?.());
       >
         <div
           ref="cardRef"
+          v-glass
           class="vl-modal-card"
           role="alertdialog"
           aria-modal="true"

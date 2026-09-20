@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { VustGlassValue } from "../glass";
+import { useGlass } from "../internal/use-glass";
 import { computed, nextTick, onBeforeUnmount, ref, watch } from "vue";
 import { activateModalLifecycle } from "../internal/modal-lifecycle";
 
@@ -11,6 +13,7 @@ defineOptions({
  */
 
 interface Props {
+  glass?: VustGlassValue;
   /** 对话框是否显示 */
   visible: boolean;
   /** 对话框标题 */
@@ -24,6 +27,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  glass: undefined,
   width: "500px",
   closeOnClickOverlay: true,
   zIndex: "var(--vdl-z-index-modal)",
@@ -53,6 +57,7 @@ watch(
   { immediate: true },
 );
 onBeforeUnmount(() => deactivate?.());
+const vGlass = useGlass(() => props.glass, "surface");
 </script>
 
 <template>
@@ -74,6 +79,13 @@ onBeforeUnmount(() => deactivate?.());
           :aria-labelledby="titleId"
           tabindex="-1"
         >
+          <div
+            v-glass
+            class="vl-dialog-glass-layer"
+            aria-hidden="true"
+            data-slot="glass-layer"
+          ></div>
+
           <!-- 头部标题栏 -->
           <div class="vl-dialog-header" data-slot="header">
             <span :id="titleId" class="vl-dialog-title">{{ title }}</span>
@@ -105,8 +117,8 @@ onBeforeUnmount(() => deactivate?.());
 .vl-dialog-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(8, 12, 24, 0.65);
-  backdrop-filter: blur(4px);
+  background: var(--vdl-bg-backdrop);
+  backdrop-filter: none;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -114,7 +126,8 @@ onBeforeUnmount(() => deactivate?.());
 }
 
 .vl-dialog-card {
-  background-color: var(--vdl-bg-panel);
+  position: relative;
+  background-color: transparent;
   border-radius: var(--vdl-radius-lg);
   border: 1px solid var(--vdl-border-strong);
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
@@ -125,7 +138,18 @@ onBeforeUnmount(() => deactivate?.());
   animation: vl-dialog-pop 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+.vl-dialog-glass-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background-color: var(--vdl-bg-panel);
+  pointer-events: none;
+}
+
 .vl-dialog-header {
+  position: relative;
+  z-index: 1;
   padding: var(--vdl-space-4) var(--vdl-space-4);
   background-color: var(--vdl-bg-muted);
   border-bottom: 1px solid var(--vdl-border-subtle);
@@ -158,6 +182,8 @@ onBeforeUnmount(() => deactivate?.());
 }
 
 .vl-dialog-body {
+  position: relative;
+  z-index: 1;
   padding: var(--vdl-space-4);
   overflow-y: auto;
   flex: 1;
@@ -165,6 +191,8 @@ onBeforeUnmount(() => deactivate?.());
 }
 
 .vl-dialog-footer {
+  position: relative;
+  z-index: 1;
   padding: var(--vdl-space-4) var(--vdl-space-4);
   background-color: var(--vdl-bg-muted);
   border-top: 1px solid var(--vdl-border-subtle);
