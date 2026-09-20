@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { VustGlassValue } from "../glass";
+import { useGlass } from "../internal/use-glass";
 /**
  * @file VustToast.vue
  * @description VUST 平台自研通知提示组件，支持多种类型和自动消失。
@@ -14,12 +16,16 @@ export interface ToastItem {
   message: string;
 }
 
-defineProps<{
-  /** 通知列表 */
-  toasts: ToastItem[];
-  /** 关闭按钮的无障碍标签 */
-  closeLabel?: string;
-}>();
+const props = withDefaults(
+  defineProps<{
+    glass?: VustGlassValue;
+    /** 通知列表 */
+    toasts: ToastItem[];
+    /** 关闭按钮的无障碍标签 */
+    closeLabel?: string;
+  }>(),
+  { glass: undefined },
+);
 
 const emit = defineEmits<{
   (e: "close", id: string): void;
@@ -31,6 +37,7 @@ function toastIcon(type: ToastItem["type"]) {
   if (type === "warning") return "warning";
   return "info";
 }
+const vGlass = useGlass(() => props.glass, "surface");
 </script>
 
 <template>
@@ -44,6 +51,7 @@ function toastIcon(type: ToastItem["type"]) {
         <div
           v-for="toast in toasts"
           :key="toast.id"
+          v-glass
           class="vl-toast-item"
           :class="[`is-${toast.type}`]"
           :role="toast.type === 'error' ? 'alert' : 'status'"

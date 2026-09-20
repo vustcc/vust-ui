@@ -1,3 +1,18 @@
+export {
+  resolveGlass,
+  type ResolvedGlass,
+  type VustGlassMode,
+  type VustGlassOptions,
+  type VustGlassProfile,
+  type VustGlassValue,
+} from "./glass";
+
+export { VustGlassProvider } from "./components/VustGlassProvider/VustGlassProvider";
+export type { VustGlassProviderProps } from "./components/VustGlassProvider/VustGlassProvider";
+
+export { VustGlassSurface } from "./components/VustGlassSurface/VustGlassSurface";
+export type { VustGlassSurfaceProps } from "./components/VustGlassSurface/VustGlassSurface";
+
 export { VustIcon } from "./components/VustIcon/VustIcon";
 export type { VustIconProps } from "./components/VustIcon/VustIcon";
 

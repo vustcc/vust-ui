@@ -4,9 +4,17 @@ import "@vustcc/tokens/index.css";
 import "@vustcc/react/style.css";
 import "./index.css";
 import App from "./App";
+import GlassLab from "./GlassLab";
+import { VustGlassProvider } from "@vustcc/react";
+
+const Content = new URLSearchParams(location.search).has("glass")
+  ? GlassLab
+  : App;
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    <VustGlassProvider>
+      <Content />
+    </VustGlassProvider>
   </StrictMode>,
 );

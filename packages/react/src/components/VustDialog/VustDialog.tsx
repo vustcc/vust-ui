@@ -1,6 +1,8 @@
 import React, { useEffect, useId, useRef } from "react";
 import { createPortal } from "react-dom";
 import { activateModalLifecycle } from "../../internal/modal-lifecycle";
+import type { VustGlassValue } from "../../glass";
+import { useGlass } from "../../internal/use-glass";
 import "./VustDialog.css";
 
 export interface VustDialogProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -20,6 +22,8 @@ export interface VustDialogProps extends React.HTMLAttributes<HTMLDivElement> {
   footer?: React.ReactNode;
   /** 对话框内容 */
   children?: React.ReactNode;
+  /** 液态玻璃材质配置 */
+  glass?: VustGlassValue;
 }
 
 export const VustDialog: React.FC<VustDialogProps> = ({
@@ -33,9 +37,11 @@ export const VustDialog: React.FC<VustDialogProps> = ({
   className = "",
   style,
   children,
+  glass,
   ...rest
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
+  const glassRef = useGlass<HTMLDivElement>(glass, "surface");
   const titleId = useId();
   useEffect(() => {
     if (!visible || !cardRef.current) return;
@@ -71,6 +77,13 @@ export const VustDialog: React.FC<VustDialogProps> = ({
         aria-labelledby={titleId}
         tabIndex={-1}
       >
+        <div
+          ref={glassRef}
+          className="vl-dialog-glass-layer"
+          aria-hidden="true"
+          data-slot="glass-layer"
+        />
+
         {/* 头部标题栏 */}
         <div className="vl-dialog-header" data-slot="header">
           <span id={titleId} className="vl-dialog-title">

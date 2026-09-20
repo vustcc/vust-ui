@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import type { VustGlassValue } from "../glass";
+import { useGlass } from "../internal/use-glass";
 /**
  * @file VustAlert.vue
  * @description VUST 平台自研通知横幅组件，严格遵循 VDL 设计规范。
  */
 
 interface Props {
+  glass?: VustGlassValue;
   /** 警告标题 */
   title?: string;
   /** 警告描述 (如果有 title, 则在下方显示) */
@@ -19,7 +22,8 @@ interface Props {
   closeLabel?: string;
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
+  glass: undefined,
   type: "info",
   showIcon: false,
   closable: false,
@@ -32,6 +36,7 @@ const emit = defineEmits<{
 import { ref } from "vue";
 import VustIcon from "./VustIcon.vue";
 const visible = ref(true);
+const vGlass = useGlass(() => props.glass, "surface");
 
 function handleClose() {
   visible.value = false;
@@ -48,7 +53,13 @@ function alertIcon(type: NonNullable<Props["type"]>) {
 
 <template>
   <Transition name="vl-alert-fade">
-    <div v-if="visible" class="vl-alert" :class="[`is-${type}`]" role="alert">
+    <div
+      v-if="visible"
+      v-glass
+      class="vl-alert"
+      :class="[`is-${type}`]"
+      role="alert"
+    >
       <div v-if="showIcon" class="vl-alert-icon">
         <VustIcon :name="alertIcon(type)" :size="16" />
       </div>

@@ -1,5 +1,7 @@
 import React from "react";
 import { VustButton } from "../VustButton/VustButton";
+import type { VustGlassValue } from "../../glass";
+import { useGlass } from "../../internal/use-glass";
 import "./VustSelectionBar.css";
 
 export interface VustSelectionBarProps extends Omit<
@@ -20,6 +22,8 @@ export interface VustSelectionBarProps extends Omit<
   onClear?: () => void;
   /** 批量操作。 */
   children?: React.ReactNode;
+  /** 液态玻璃材质配置 */
+  glass?: VustGlassValue;
 }
 
 export const VustSelectionBar: React.FC<VustSelectionBarProps> = ({
@@ -30,36 +34,42 @@ export const VustSelectionBar: React.FC<VustSelectionBarProps> = ({
   ariaLabel,
   onClear,
   children,
+  glass,
   className = "",
   ...rest
-}) => (
-  <div
-    className={`vl-selection-bar ${className}`.trim()}
-    {...rest}
-    data-ui="selection-bar"
-  >
+}) => {
+  const glassRef = useGlass<HTMLDivElement>(glass, "control");
+  return (
     <div
-      className="vl-selection-summary"
-      role="status"
-      aria-live="polite"
-      aria-atomic="true"
-      aria-label={ariaLabel}
-      data-slot="selection-summary"
+      ref={glassRef}
+      className={`vl-selection-bar ${className}`.trim()}
+      {...rest}
+      data-ui="selection-bar"
     >
-      <span className="vl-selection-label">{label}</span>
-      <span className="vl-selection-count">{count}</span>
+      <div
+        className="vl-selection-summary"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        aria-label={ariaLabel}
+        data-slot="selection-summary"
+      >
+        <span className="vl-selection-label">{label}</span>
+        <span className="vl-selection-count">{count}</span>
+      </div>
+      <div className="vl-selection-actions" data-slot="selection-actions">
+        {children}
+        {clearLabel && (
+          <VustButton
+            glass={glass}
+            disabled={clearDisabled}
+            data-ui="clear-selection"
+            onClick={onClear}
+          >
+            {clearLabel}
+          </VustButton>
+        )}
+      </div>
     </div>
-    <div className="vl-selection-actions" data-slot="selection-actions">
-      {children}
-      {clearLabel && (
-        <VustButton
-          disabled={clearDisabled}
-          data-ui="clear-selection"
-          onClick={onClear}
-        >
-          {clearLabel}
-        </VustButton>
-      )}
-    </div>
-  </div>
-);
+  );
+};

@@ -1,4 +1,6 @@
 import React from "react";
+import type { VustGlassValue } from "../../glass";
+import { useGlass } from "../../internal/use-glass";
 import "./VustTabs.css";
 
 export interface TabItem {
@@ -17,12 +19,48 @@ export interface VustTabsProps extends Omit<
   tabs: TabItem[];
   /** 绑定值改变事件 */
   onChange?: (name: string) => void;
+  glass?: VustGlassValue;
 }
+
+interface TabButtonProps {
+  tab: TabItem;
+  active: boolean;
+  glass?: VustGlassValue;
+  onClick: () => void;
+  onKeyDown: React.KeyboardEventHandler<HTMLButtonElement>;
+}
+
+const TabButton: React.FC<TabButtonProps> = ({
+  tab,
+  active,
+  glass,
+  onClick,
+  onKeyDown,
+}) => {
+  const glassRef = useGlass<HTMLButtonElement>(glass, "control", active);
+  return (
+    <button
+      ref={glassRef}
+      type="button"
+      className={`vl-tabs-item ${active ? "is-active" : ""} ${tab.disabled ? "is-disabled" : ""}`.trim()}
+      role="tab"
+      aria-selected={active}
+      tabIndex={active ? 0 : -1}
+      disabled={tab.disabled}
+      data-tab-name={tab.name}
+      onClick={onClick}
+      onKeyDown={onKeyDown}
+    >
+      {tab.label}
+    </button>
+  );
+};
 
 export const VustTabs: React.FC<VustTabsProps> = ({
   value,
   tabs = [],
   onChange,
+  glass,
   className = "",
   ...rest
 }) => {
@@ -63,20 +101,14 @@ export const VustTabs: React.FC<VustTabsProps> = ({
     <div className={`vl-tabs ${className}`.trim()} {...rest}>
       <div className="vl-tabs-nav" role="tablist">
         {tabs.map((tab) => (
-          <button
-            type="button"
+          <TabButton
             key={tab.name}
-            className={`vl-tabs-item ${value === tab.name ? "is-active" : ""} ${tab.disabled ? "is-disabled" : ""}`.trim()}
-            role="tab"
-            aria-selected={value === tab.name}
-            tabIndex={value === tab.name ? 0 : -1}
-            disabled={tab.disabled}
-            data-tab-name={tab.name}
+            tab={tab}
+            active={value === tab.name}
+            glass={glass}
             onClick={() => handleTabClick(tab)}
             onKeyDown={(event) => handleKeyDown(event, tabs.indexOf(tab))}
-          >
-            {tab.label}
-          </button>
+          />
         ))}
       </div>
     </div>

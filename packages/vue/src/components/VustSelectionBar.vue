@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { VustGlassValue } from "../glass";
+import { useGlass } from "../internal/use-glass";
 /**
  * @file VustSelectionBar.vue
  * @description 为表格及列表的批量选择状态提供统一摘要和操作布局。
@@ -7,6 +9,7 @@
 import VustButton from "./VustButton.vue";
 
 interface Props {
+  glass?: VustGlassValue;
   /** 已选择项目数量。 */
   count: number;
   /** 数量前的本地化说明，例如“已选择”。 */
@@ -19,17 +22,19 @@ interface Props {
   ariaLabel?: string;
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
+  glass: undefined,
   clearDisabled: false,
 });
 
 const emit = defineEmits<{
   clear: [];
 }>();
+const vGlass = useGlass(() => props.glass, "control");
 </script>
 
 <template>
-  <div class="vl-selection-bar" data-ui="selection-bar">
+  <div v-glass class="vl-selection-bar" data-ui="selection-bar">
     <div
       class="vl-selection-summary"
       role="status"
@@ -44,6 +49,7 @@ const emit = defineEmits<{
     <div class="vl-selection-actions" data-slot="selection-actions">
       <slot></slot>
       <VustButton
+        :glass="glass"
         v-if="clearLabel"
         :disabled="clearDisabled"
         data-ui="clear-selection"

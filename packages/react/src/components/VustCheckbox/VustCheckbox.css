@@ -76,18 +76,18 @@
   transition: transform 0.15s ease-in;
 }
 
-.vl-checkbox.is-active .vl-checkbox-inner {
-  background-color: var(--vdl-primary);
+.vl-checkbox.is-active .vl-checkbox-inner,
+.vl-checkbox.is-indeterminate .vl-checkbox-inner {
   border-color: var(--vdl-primary);
+}
+
+.vl-checkbox.is-active .vl-checkbox-inner[data-glass-mode="solid"],
+.vl-checkbox.is-indeterminate .vl-checkbox-inner[data-glass-mode="solid"] {
+  background-color: var(--vdl-primary);
 }
 
 .vl-checkbox.is-active .vl-checkbox-inner::after {
   transform: rotate(45deg) scaleY(1);
-}
-
-.vl-checkbox.is-indeterminate .vl-checkbox-inner {
-  background-color: var(--vdl-primary);
-  border-color: var(--vdl-primary);
 }
 
 .vl-checkbox.is-indeterminate .vl-checkbox-inner::before {

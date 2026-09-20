@@ -8,7 +8,13 @@
   "style": "./dist/index.css",
   "exports": {
     ".": "./dist/index.css",
-    "./index.css": "./dist/index.css"
+    "./index.css": "./dist/index.css",
+    "./glass.css": "./dist/glass.css",
+    "./scrollbar.css": "./dist/scrollbar.css",
+    "./glass": {
+      "types": "./dist/glass.d.ts",
+      "import": "./dist/glass.js"
+    }
   },
   "files": [
     "dist",

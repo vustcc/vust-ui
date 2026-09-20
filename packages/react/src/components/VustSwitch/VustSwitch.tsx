@@ -1,4 +1,6 @@
 import React from "react";
+import type { VustGlassValue } from "../../glass";
+import { useGlass } from "../../internal/use-glass";
 import "./VustSwitch.css";
 
 export interface VustSwitchProps extends Omit<
@@ -9,6 +11,7 @@ export interface VustSwitchProps extends Omit<
   onChange?: (value: boolean) => void;
   activeText?: string;
   disabled?: boolean;
+  glass?: VustGlassValue;
 }
 
 export const VustSwitch: React.FC<VustSwitchProps> = ({
@@ -16,9 +19,11 @@ export const VustSwitch: React.FC<VustSwitchProps> = ({
   onChange,
   activeText = "",
   disabled = false,
+  glass,
   className = "",
   ...rest
 }) => {
+  const glassRef = useGlass<HTMLDivElement>(glass, "control");
   const toggle = () => {
     if (disabled) return;
     onChange?.(!value);
@@ -35,7 +40,7 @@ export const VustSwitch: React.FC<VustSwitchProps> = ({
       {...rest}
     >
       <div className="vl-switch-track">
-        <div className="vl-switch-handle" />
+        <div ref={glassRef} className="vl-switch-handle" />
       </div>
       {activeText && <span className="vl-switch-label">{activeText}</span>}
     </button>

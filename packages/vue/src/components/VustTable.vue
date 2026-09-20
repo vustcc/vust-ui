@@ -1,4 +1,6 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
+import type { VustGlassValue } from "../glass";
+import { useGlass } from "../internal/use-glass";
 /**
  * @file VustTable.vue
  * @description VUST 平台自研表格组件，严格遵循 VDL 设计规范。
@@ -25,6 +27,7 @@ export interface VustTableColumn {
 
 const props = withDefaults(
   defineProps<{
+    glass?: VustGlassValue;
     /** 表格数据 */
     data: T[];
     /** 列配置 */
@@ -49,6 +52,7 @@ const props = withDefaults(
     selectionColumnWidth?: number;
   }>(),
   {
+    glass: undefined,
     border: false,
     emptyText: "暂无数据",
     selectable: false,
@@ -185,16 +189,18 @@ function updatePageSelection(selected: boolean) {
   }
   updateSelection([...next]);
 }
+const vGlass = useGlass(() => props.glass, "surface");
 </script>
 
 <template>
   <div
+    v-glass
     class="vl-table-container"
     :class="{ 'vl-table-border': border }"
     data-native-context-menu
   >
     <div class="vl-table-wrapper">
-      <table class="vl-table">
+      <table class="vl-table" :class="{ 'is-empty': data.length === 0 }">
         <thead>
           <tr class="vl-table-header-row">
             <th
@@ -209,6 +215,7 @@ function updatePageSelection(selected: boolean) {
             >
               <div class="vl-cell vl-table-selection-control">
                 <VustCheckbox
+                  :glass="glass"
                   :model-value="allPageRowsSelected"
                   :indeterminate="somePageRowsSelected"
                   :disabled="selectableRows.length === 0"
@@ -269,6 +276,7 @@ function updatePageSelection(selected: boolean) {
               >
                 <div class="vl-cell vl-table-selection-control">
                   <VustCheckbox
+                    :glass="glass"
                     :model-value="
                       selectedKeySet.has(resolveRowKey(row, rowIndex))
                     "
@@ -336,7 +344,6 @@ function updatePageSelection(selected: boolean) {
   flex: 1;
   min-height: 0;
   overflow: auto;
-  scrollbar-width: thin;
 }
 
 .vl-table {
@@ -345,6 +352,15 @@ function updatePageSelection(selected: boolean) {
   border-spacing: 0;
   border-collapse: separate;
   table-layout: auto;
+}
+
+.vl-table.is-empty {
+  height: 100%;
+}
+
+.vl-table.is-empty tbody,
+.vl-table.is-empty tbody > tr {
+  height: 100%;
 }
 
 /* 表头样式 */
@@ -364,7 +380,7 @@ function updatePageSelection(selected: boolean) {
 
 /* 单元格通用样式 */
 .vl-table-cell {
-  background-color: transparent;
+  background-color: var(--vdl-bg-base);
   color: var(--vdl-text-primary);
   font-size: var(--vdl-font-body-sm);
   font-weight: 500;
@@ -421,25 +437,31 @@ function updatePageSelection(selected: boolean) {
   position: sticky;
   right: 0;
   z-index: 20;
-  background-color: var(--vdl-bg-panel); /* 固定列需要有不透明背景 */
 }
 .is-fixed-left {
   position: sticky;
   left: 0;
   z-index: 20;
-  background-color: var(--vdl-bg-panel);
+}
+.vl-table-cell.is-fixed-left,
+.vl-table-cell.is-fixed-right {
+  /* 固定列需要与普通单元格使用相同的不透明衬底。 */
+  background-color: var(--vdl-bg-base);
 }
 .vl-table-header-cell.is-fixed-left {
   z-index: 30;
+  background-color: var(--vdl-bg-muted);
 }
 
 /* 如果表头也有固定列，层级需要更高 */
 .vl-table-header-cell.is-fixed-right {
   z-index: 30;
+  background-color: var(--vdl-bg-muted);
 }
 
 /* 空状态样式 */
 .vl-table-empty-cell {
+  height: 100%;
   padding: var(--vdl-space-8) 0;
   text-align: center;
 }
@@ -447,20 +469,5 @@ function updatePageSelection(selected: boolean) {
 .vl-table-empty {
   color: var(--vdl-text-muted);
   font-size: var(--vdl-font-body-sm);
-}
-
-/* 滚动条美化 */
-.vl-table-wrapper::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-.vl-table-wrapper::-webkit-scrollbar-thumb {
-  background: var(--vdl-scrollbar-thumb);
-  border-radius: var(--vdl-radius-pill);
-}
-
-.vl-table-wrapper::-webkit-scrollbar-track {
-  background: var(--vdl-scrollbar-track);
 }
 </style>

@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import type { VustGlassValue } from "../glass";
+import { useGlass } from "../internal/use-glass";
 /**
  * @file VustButton.vue
  * @description VUST 平台自研按钮组件，严格遵循 VDL 设计规范。
  */
 
 interface Props {
+  glass?: VustGlassValue;
   /** 按钮类型 */
   type?: "primary" | "secondary" | "danger" | "warning" | "info";
   /** 按钮尺寸 */
@@ -15,7 +18,8 @@ interface Props {
   loading?: boolean;
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
+  glass: undefined,
   type: "secondary",
   size: "default",
   disabled: false,
@@ -29,10 +33,12 @@ const emit = defineEmits<{
 function handleClick(event: MouseEvent) {
   emit("click", event);
 }
+const vGlass = useGlass(() => props.glass, "control");
 </script>
 
 <template>
   <button
+    v-glass
     class="vl-button"
     :class="[
       `vl-button--${type}`,

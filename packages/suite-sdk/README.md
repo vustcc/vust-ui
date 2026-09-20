@@ -34,6 +34,7 @@ SDK 会把最终主题写入：
 
 ```ts
 document.documentElement.dataset.theme;
+document.documentElement.dataset.glass;
 document.documentElement.style.colorScheme;
 ```
 
@@ -42,6 +43,7 @@ document.documentElement.style.colorScheme;
 ```ts
 const unsubscribe = bridge.subscribeTheme((theme) => {
   console.log(theme.resolvedTheme);
+  console.log(theme.glassEnabled);
 });
 
 unsubscribe();

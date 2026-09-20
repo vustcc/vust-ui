@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { VustGlassValue } from "../glass";
+import { useGlass } from "../internal/use-glass";
 import { computed, nextTick, onBeforeUnmount, ref, watch } from "vue";
 import { activateModalLifecycle } from "../internal/modal-lifecycle";
 
@@ -13,12 +15,14 @@ defineOptions({
 
 const props = withDefaults(
   defineProps<{
+    glass?: VustGlassValue;
     modelValue: boolean;
     title?: string;
     width?: string;
     closeOnOverlay?: boolean;
   }>(),
   {
+    glass: undefined,
     title: "",
     width: "420px",
     closeOnOverlay: true,
@@ -58,6 +62,7 @@ watch(
   { immediate: true },
 );
 onBeforeUnmount(() => deactivate?.());
+const vGlass = useGlass(() => props.glass, "surface");
 </script>
 
 <template>
@@ -71,6 +76,7 @@ onBeforeUnmount(() => deactivate?.());
       >
         <div
           ref="panelRef"
+          v-glass
           class="vl-drawer-panel"
           :style="drawerStyle"
           role="dialog"

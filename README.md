@@ -37,6 +37,7 @@ Playground 使用工作区包的 `dist` 构建产物，首次启动前以及修�
 ## 文档与测试
 
 - [组件契约](./docs/components/README.md)
+- [Liquid Glass 共享契约](./docs/components/liquid-glass.md)
 - [贡献指南](./CONTRIBUTING.md)
 - `pnpm format:check`：检查代码格式，不改写文件。
 - `pnpm check`：格式、类型、构建、单元测试、消费者构建和包归档检查。

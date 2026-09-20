@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import type { VustGlassValue } from "../glass";
+import { useGlass } from "../internal/use-glass";
 /**
  * @file VustSwitch.vue
  * @description VUST 平台自研开关组件，严格遵循 VDL 设计规范。
  */
 
 interface Props {
+  glass?: VustGlassValue;
   /** 绑定值 */
   modelValue: boolean;
   /** 激活时的文字 */
@@ -14,6 +17,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  glass: undefined,
   activeText: "",
   disabled: false,
 });
@@ -29,6 +33,7 @@ function toggle() {
   emit("update:modelValue", newValue);
   emit("change", newValue);
 }
+const vGlass = useGlass(() => props.glass, "control");
 </script>
 
 <template>
@@ -42,7 +47,7 @@ function toggle() {
     :disabled="disabled"
   >
     <div class="vl-switch-track">
-      <div class="vl-switch-handle"></div>
+      <div v-glass class="vl-switch-handle"></div>
     </div>
     <span v-if="activeText" class="vl-switch-label">{{ activeText }}</span>
   </button>

@@ -1,6 +1,8 @@
 import React, { useEffect, useId, useRef } from "react";
 import { createPortal } from "react-dom";
 import { activateModalLifecycle } from "../../internal/modal-lifecycle";
+import type { VustGlassValue } from "../../glass";
+import { useGlass } from "../../internal/use-glass";
 import "./VustDrawer.css";
 
 export interface VustDrawerProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -18,6 +20,8 @@ export interface VustDrawerProps extends React.HTMLAttributes<HTMLDivElement> {
   footer?: React.ReactNode;
   /** 抽屉主体内容 */
   children?: React.ReactNode;
+  /** 液态玻璃材质配置 */
+  glass?: VustGlassValue;
 }
 
 export const VustDrawer: React.FC<VustDrawerProps> = ({
@@ -30,9 +34,11 @@ export const VustDrawer: React.FC<VustDrawerProps> = ({
   className = "",
   style,
   children,
+  glass,
   ...rest
 }) => {
   const panelRef = useRef<HTMLDivElement>(null);
+  const glassRef = useGlass<HTMLDivElement>(glass, "surface");
   const titleId = useId();
   useEffect(() => {
     if (!visible || !panelRef.current) return;
@@ -59,7 +65,10 @@ export const VustDrawer: React.FC<VustDrawerProps> = ({
       {...rest}
     >
       <div
-        ref={panelRef}
+        ref={(node) => {
+          panelRef.current = node;
+          glassRef(node);
+        }}
         className="vl-drawer-panel"
         style={drawerStyle}
         role="dialog"

@@ -1,4 +1,6 @@
 import React, { useMemo } from "react";
+import type { VustGlassValue } from "../../glass";
+import { useGlass } from "../../internal/use-glass";
 import "./VustPagination.css";
 
 export interface VustPaginationProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -13,7 +15,16 @@ export interface VustPaginationProps extends React.HTMLAttributes<HTMLDivElement
   ariaLabel?: string;
   previousLabel?: string;
   nextLabel?: string;
+  /** 液态玻璃材质配置 */
+  glass?: VustGlassValue;
 }
+
+const PaginationButton: React.FC<
+  React.ButtonHTMLAttributes<HTMLButtonElement> & { glass?: VustGlassValue }
+> = ({ glass, ...props }) => {
+  const glassRef = useGlass<HTMLButtonElement>(glass, "control");
+  return <button ref={glassRef} {...props} />;
+};
 
 export const VustPagination: React.FC<VustPaginationProps> = ({
   currentPage,
@@ -23,6 +34,7 @@ export const VustPagination: React.FC<VustPaginationProps> = ({
   ariaLabel = "Pagination",
   previousLabel = "Previous page",
   nextLabel = "Next page",
+  glass,
   className = "",
   ...rest
 }) => {
@@ -84,7 +96,8 @@ export const VustPagination: React.FC<VustPaginationProps> = ({
       aria-label={ariaLabel}
       {...rest}
     >
-      <button
+      <PaginationButton
+        glass={glass}
         type="button"
         className="vl-pagination-btn"
         onClick={() => changePage(currentPage - 1)}
@@ -92,7 +105,7 @@ export const VustPagination: React.FC<VustPaginationProps> = ({
         aria-label={previousLabel}
       >
         &lt;
-      </button>
+      </PaginationButton>
 
       {pages.map((page, index) => {
         const isActive = page === currentPage;
@@ -106,7 +119,8 @@ export const VustPagination: React.FC<VustPaginationProps> = ({
             …
           </span>
         ) : (
-          <button
+          <PaginationButton
+            glass={glass}
             key={index}
             type="button"
             className={`vl-pagination-btn ${isActive ? "active" : ""} ${isEllipsis ? "ellipsis" : ""}`.trim()}
@@ -115,11 +129,12 @@ export const VustPagination: React.FC<VustPaginationProps> = ({
             aria-label={`Page ${page}`}
           >
             {page}
-          </button>
+          </PaginationButton>
         );
       })}
 
-      <button
+      <PaginationButton
+        glass={glass}
         type="button"
         className="vl-pagination-btn"
         onClick={() => changePage(currentPage + 1)}
@@ -127,7 +142,7 @@ export const VustPagination: React.FC<VustPaginationProps> = ({
         aria-label={nextLabel}
       >
         &gt;
-      </button>
+      </PaginationButton>
     </nav>
   );
 };

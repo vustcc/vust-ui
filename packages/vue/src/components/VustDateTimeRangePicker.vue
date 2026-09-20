@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { VustGlassValue } from "../glass";
+import { useGlass } from "../internal/use-glass";
 import { computed, nextTick, onBeforeUnmount, ref, watch } from "vue";
 import { computeFloatingPosition } from "../internal/floating-position";
 
@@ -18,6 +20,7 @@ interface ShortcutOption {
 }
 
 interface Props {
+  glass?: VustGlassValue;
   /** 绑定的时间范围，使用 Unix epoch milliseconds。 */
   modelValue: DateTimeRangeValue;
   /** 占位文案 */
@@ -49,6 +52,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  glass: undefined,
   disabled: false,
 });
 
@@ -336,6 +340,7 @@ watch(
 );
 
 onBeforeUnmount(closePanel);
+const vGlass = useGlass(() => props.glass, "input");
 </script>
 
 <template>
@@ -343,6 +348,7 @@ onBeforeUnmount(closePanel);
     <button
       ref="triggerRef"
       type="button"
+      v-glass
       class="range-trigger"
       :class="{ 'is-placeholder': !modelValue.startAt && !modelValue.endAt }"
       :disabled="disabled"
@@ -355,6 +361,7 @@ onBeforeUnmount(closePanel);
       <div
         v-if="isOpen"
         ref="panelRef"
+        v-glass
         class="range-panel"
         :style="panelStyle"
         :data-placement="panelPlacement"

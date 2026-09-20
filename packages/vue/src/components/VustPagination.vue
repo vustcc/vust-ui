@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import type { VustGlassValue } from "../glass";
+import { useGlass } from "../internal/use-glass";
+import { computed, type PropType } from "vue";
 
 /**
  * @file VustPagination.vue
@@ -7,6 +9,10 @@ import { computed } from "vue";
  */
 
 const props = defineProps({
+  glass: {
+    type: [Boolean, Object] as PropType<VustGlassValue>,
+    default: undefined,
+  },
   currentPage: {
     type: Number,
     required: true,
@@ -75,11 +81,13 @@ function changePage(page: number | string) {
     emit("page-change", page);
   }
 }
+const vGlass = useGlass(() => props.glass, "control");
 </script>
 
 <template>
   <nav class="vl-pagination" v-if="totalPages > 1" :aria-label="ariaLabel">
     <button
+      v-glass
       class="vl-pagination-btn"
       type="button"
       :aria-label="previousLabel"
@@ -98,6 +106,7 @@ function changePage(page: number | string) {
       <button
         v-else
         type="button"
+        v-glass
         class="vl-pagination-btn"
         :class="{
           active: page === currentPage,
@@ -110,6 +119,7 @@ function changePage(page: number | string) {
       </button>
     </template>
     <button
+      v-glass
       class="vl-pagination-btn"
       type="button"
       :aria-label="nextLabel"

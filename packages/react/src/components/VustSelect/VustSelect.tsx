@@ -9,6 +9,8 @@ import React, {
 } from "react";
 import { createPortal } from "react-dom";
 import { computeFloatingPosition } from "../../internal/floating-position";
+import type { VustGlassValue } from "../../glass";
+import { useGlass } from "../../internal/use-glass";
 import "./VustSelect.css";
 
 export interface VustSelectOption {
@@ -50,6 +52,8 @@ export interface VustSelectProps extends Omit<
   onDropdownReachBottom?: (event: React.UIEvent<HTMLUListElement>) => void;
   /** 下拉列表底部内容 */
   dropdownFooter?: React.ReactNode;
+  /** 液态玻璃材质配置 */
+  glass?: VustGlassValue;
 }
 
 const SCROLL_BOTTOM_THRESHOLD = 24;
@@ -69,6 +73,7 @@ export const VustSelect: React.FC<VustSelectProps> = ({
   onDropdownScroll,
   onDropdownReachBottom,
   dropdownFooter,
+  glass,
   className = "",
   ...rest
 }) => {
@@ -81,6 +86,8 @@ export const VustSelect: React.FC<VustSelectProps> = ({
   });
   const selectRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLUListElement>(null);
+  const triggerGlassRef = useGlass<HTMLButtonElement>(glass, "input");
+  const dropdownGlassRef = useGlass<HTMLUListElement>(glass, "input");
   const [activeIndex, setActiveIndex] = useState(-1);
   const generatedId = useId();
   const resolvedId = id ?? generatedId;
@@ -224,6 +231,7 @@ export const VustSelect: React.FC<VustSelectProps> = ({
       {...rest}
     >
       <button
+        ref={triggerGlassRef}
         id={resolvedId}
         type="button"
         className="vl-select-trigger"
@@ -253,7 +261,10 @@ export const VustSelect: React.FC<VustSelectProps> = ({
       {isOpen &&
         createPortal(
           <ul
-            ref={dropdownRef}
+            ref={(node) => {
+              dropdownRef.current = node;
+              dropdownGlassRef(node);
+            }}
             id={listboxId}
             role="listbox"
             className="vl-select-options"
